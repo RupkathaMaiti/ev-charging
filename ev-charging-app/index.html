@@ -1,0 +1,188 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EV Charging Slot Booking</title>
+    <link rel="stylesheet" href="style.css">
+
+    <!-- Firebase Initialization -->
+    <script type="module">
+        // Import the functions you need from the Firebase SDKs
+        // IMPORTANT: Using Firebase SDK version 12.0.0 as provided by you.
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
+        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
+        import { getFirestore, doc, setDoc, getDoc, collection, addDoc, getDocs, query, orderBy, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
+
+        // Your web app's Firebase configuration (PASTED FROM YOUR CONSOLE)
+        const firebaseConfig = {
+            apiKey: "AIzaSyDJBsVqbU3Upus8YxoVqGmgSHC26AOFk4M",
+            authDomain: "ev-charging-app-2025.firebaseapp.com",
+            projectId: "ev-charging-app-2025",
+            storageBucket: "ev-charging-app-2025.firebasestorage.app",
+            messagingSenderId: "572500308452",
+            appId: "1:572500308452:web:f739fa728d3916c0aa17f1"
+        };
+
+        // Initialize Firebase App
+        const app = initializeApp(firebaseConfig);
+
+        // Make Firebase services and Firestore functions globally accessible for app.js
+        // This is crucial because app.js is NOT a module itself,
+        // and needs to access these initialized Firebase objects.
+        window.db = getFirestore(app);
+        window.collection = collection;
+        window.addDoc = addDoc;
+        window.getDocs = getDocs;
+        window.query = query;
+        window.orderBy = orderBy;
+        window.serverTimestamp = serverTimestamp;
+        window.doc = doc;
+        window.setDoc = setDoc;
+        window.getDoc = getDoc;
+
+        // Authentication services and functions
+        window.auth = getAuth(app);
+        window.createUserWithEmailAndPassword = createUserWithEmailAndPassword;
+        window.signInWithEmailAndPassword = signInWithEmailAndPassword;
+        window.signOut = signOut;
+        window.onAuthStateChanged = onAuthStateChanged;
+
+        // Dispatch a custom event when Firebase is fully initialized and functions are exposed
+        // app.js listens for this event to start its Firebase-dependent logic.
+        window.dispatchEvent(new Event('firebaseReady'));
+    </script>
+</head>
+<body>
+    <!-- Authentication Section - This will be visible initially when no one is logged in -->
+    <div id="authSection" class="auth-container">
+        <h1>Welcome to EV Charging!</h1>
+        <p>Please Register or Login to continue.</p>
+
+        <!-- Registration Form -->
+        <div id="registerForm" class="auth-card">
+            <h2>Register as User</h2>
+            <div>
+                <label for="registerEmail">Email:</label>
+                <input type="email" id="registerEmail" placeholder="your@example.com">
+            </div>
+            <div>
+                <label for="registerPassword">Password:</label>
+                <input type="password" id="registerPassword" placeholder="minimum 6 characters">
+            </div>
+            <button id="registerButton">Register</button>
+            <p class="toggle-link">Already have an account? <a href="#" id="showLogin">Login here</a></p>
+            <p id="registerMessage" class="message-area"></p>
+        </div>
+
+        <!-- Login Form - Hidden initially by default CSS class -->
+        <div id="loginForm" class="auth-card hidden">
+            <h2>Login</h2>
+            <div>
+                <label for="loginEmail">Email:</label>
+                <input type="email" id="loginEmail" placeholder="your@example.com">
+            </div>
+            <div>
+                <label for="loginPassword">Password:</label>
+                <input type="password" id="loginPassword" placeholder="your password">
+            </div>
+            <button id="loginButton">Login</button>
+            <p class="toggle-link">Don't have an account? <a href="#" id="showRegister">Register here</a></p>
+            <p id="loginMessage" class="message-area"></p>
+        </div>
+    </div>
+
+    <!-- Main Application Content - Hidden initially by default CSS class -->
+    <div id="mainAppContent" class="main-app-container hidden">
+        <!-- Header bar for logged-in user info and logout button -->
+        <div class="header-bar">
+            <span id="userEmailDisplay" class="user-email"></span>
+            <button id="logoutButton" class="logout-button">Logout</button>
+        </div>
+
+        <h1>EV Charging Dashboard</h1>
+        <p id="generalMessageDisplay" class="message-area"></p> <!-- General message display -->
+        <p>This is your central hub for EV charging information.</p>
+
+        <!-- Admin Section - Hidden by default, only visible to Admin role -->
+        <div id="adminSection" class="role-section hidden">
+            <h2>Admin Panel: Register Driver</h2>
+            <p>Only administrators can create new driver accounts.</p>
+            <div>
+                <label for="adminRegisterEmail">Driver Email:</label>
+                <input type="email" id="adminRegisterEmail" placeholder="driver@example.com">
+            </div>
+            <div>
+                <label for="adminRegisterPassword">Driver Password:</label>
+                <input type="password" id="adminRegisterPassword" placeholder="min 6 characters">
+            </div>
+            <button id="adminRegisterDriverButton">Register Driver</button>
+            <p id="adminRegisterMessage" class="message-area"></p>
+
+            <hr style="margin: 30px 0; border: 0; border-top: 1px solid #eee;">
+
+            <h2>Admin Panel: Create EV Bunk Location Details</h2>
+            <div class="bunk-form">
+                <div>
+                    <label for="bunkName">Bunk Name/ID:</label>
+                    <input type="text" id="bunkName" placeholder="e.g., GreenCharge Station 1">
+                </div>
+                <div>
+                    <label for="bunkAddress">Location/Address:</label>
+                    <input type="text" id="bunkAddress" placeholder="e.g., 123 Main St, City">
+                </div>
+                <div>
+                    <label for="chargingType">Charging Type:</label>
+                    <input type="text" id="chargingType" placeholder="e.g., Type 2, CCS, CHAdeMO">
+                </div>
+                <div>
+                    <label for="contactInfo">Contact Info:</label>
+                    <input type="text" id="contactInfo" placeholder="e.g., 9876543210">
+                </div>
+                <div>
+                    <label for="numberOfSlots">Number of Slots:</label>
+                    <input type="number" id="numberOfSlots" min="1" value="1">
+                </div>
+                <button id="createBunkButton">Create Bunk</button>
+                <p id="createBunkMessage" class="message-area"></p>
+            </div>
+        </div>
+
+        <!-- Driver Section - Hidden by default, only visible to Driver role -->
+        <div id="driverSection" class="role-section hidden">
+            <h2>Post Charging Bunk Details (Driver Module)</h2>
+            <p>Drivers can manage their assigned bunk details here. (To be implemented)</p>
+        </div>
+
+        <!-- User Section - Visible to all logged-in users (including Admin/Driver) -->
+        <div id="userSection" class="role-section">
+            <h2>Live Charging Bunk Information (User Module)</h2>
+
+            <!-- NEW: Search Inputs and Button -->
+            <div class="search-controls">
+                <div>
+                    <label for="searchLocation">Search Location:</label>
+                    <input type="text" id="searchLocation" placeholder="e.g., City or Area">
+                </div>
+                <div>
+                    <label for="searchChargingType">Search Charging Type:</label>
+                    <input type="text" id="searchChargingType" placeholder="e.g., CCS">
+                </div>
+                <button id="searchButton">Search Bunks</button>
+                <button id="clearSearchButton" class="secondary-button">Clear Search</button>
+            </div>
+            <br>
+
+            <div id="bunkInfoDisplay">
+                No charging bunk information posted yet.
+            </div>
+        </div>
+    </div>
+
+    <!-- Link to your custom JavaScript file.
+         It's placed at the end of the body so that all HTML elements are loaded
+         before the JavaScript tries to interact with them. -->
+    <script src="app.js?v=1.3"></script>
+</body>
+</html>

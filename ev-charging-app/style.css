@@ -1,0 +1,343 @@
+body {
+    font-family: 'Inter', Arial, sans-serif; /* Using Inter font */
+    margin: 0;
+    padding: 20px;
+    background-color: #f4f4f4;
+    color: #333;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+    box-sizing: border-box; /* Include padding in element's total width and height */
+}
+
+h1, h2, h3 {
+    color: #004085; /* A darker blue for headings */
+    margin-bottom: 15px;
+}
+
+.auth-container, .main-app-container {
+    background-color: #fff;
+    padding: 30px;
+    border-radius: 12px; /* More rounded corners */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15); /* Stronger shadow */
+    width: 100%;
+    max-width: 500px; /* Slightly wider for better layout */
+    text-align: center;
+    margin-top: 20px;
+    box-sizing: border-box;
+}
+
+.hidden {
+    display: none;
+}
+
+.message-area {
+    margin-top: 15px;
+    font-weight: bold;
+    padding: 8px;
+    border-radius: 5px;
+    background-color: #e9ecef; /* Light gray background */
+    border: 1px solid #ced4da;
+}
+
+.message-area[style*="color: green"] {
+    background-color: #d4edda;
+    border-color: #c3e6cb;
+    color: #155724;
+}
+
+.message-area[style*="color: red"] {
+    background-color: #f8d7da;
+    border-color: #f5c6cb;
+    color: #721c24;
+}
+
+.message-area[style*="color: orange"] {
+    background-color: #fff3cd;
+    border-color: #ffeeba;
+    color: #856404;
+}
+
+.auth-card {
+    border: 1px solid #e0e0e0; /* Lighter border */
+    padding: 25px; /* More padding */
+    margin-top: 25px;
+    border-radius: 10px; /* More rounded */
+    background-color: #fdfdfd;
+}
+
+.auth-card div {
+    margin-bottom: 15px; /* Spacing between input groups */
+    text-align: left;
+}
+
+.auth-card label {
+    display: block; /* Label on its own line */
+    margin-bottom: 5px;
+    font-weight: 600;
+    color: #555;
+}
+
+.auth-card input {
+    width: calc(100% - 22px); /* Adjust for padding and border */
+    padding: 12px; /* More padding */
+    border: 1px solid #ccc; /* Slightly darker border */
+    border-radius: 6px; /* More rounded */
+    font-size: 1em;
+    box-sizing: border-box; /* Include padding in width */
+}
+
+.auth-card button,
+.bunk-form button, /* Apply to new bunk form buttons */
+.search-controls button { /* Apply to search buttons */
+    background-color: #007bff; /* Primary blue */
+    color: white;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 8px; /* More rounded */
+    cursor: pointer;
+    font-size: 1.05em;
+    margin-top: 15px;
+    transition: background-color 0.3s ease, transform 0.2s ease; /* Smooth transitions */
+    box-shadow: 0 2px 5px rgba(0, 123, 255, 0.2); /* Subtle shadow */
+}
+
+.auth-card button:hover,
+.bunk-form button:hover,
+.search-controls button:hover {
+    background-color: #0056b3; /* Darker blue on hover */
+    transform: translateY(-1px); /* Slight lift effect */
+}
+
+.toggle-link {
+    margin-top: 20px;
+    font-size: 0.95em;
+}
+
+.toggle-link a {
+    color: #007bff;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.toggle-link a:hover {
+    text-decoration: underline;
+}
+
+.header-bar {
+    width: 100%;
+    max-width: 800px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #343a40; /* Darker header */
+    color: white;
+    padding: 12px 25px;
+    border-radius: 12px;
+    margin-bottom: 25px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.header-bar .user-email {
+    font-weight: bold;
+    font-size: 1.1em;
+    color: #f8f9fa; /* Lighter text for contrast */
+}
+
+.header-bar .logout-button {
+    background-color: #dc3545; /* Red for logout */
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.header-bar .logout-button:hover {
+    background-color: #c82333;
+}
+
+.role-section {
+    background-color: #ffffff;
+    border: 1px solid #e0e0e0;
+    padding: 30px;
+    margin-top: 25px;
+    border-radius: 12px;
+    text-align: left;
+    width: 100%;
+    max-width: 800px; /* Wider for main content */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    box-sizing: border-box;
+}
+
+.role-section h2 {
+    color: #0056b3;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+/* Styling for the new Bunk Creation Form */
+.bunk-form div {
+    margin-bottom: 15px;
+}
+
+.bunk-form label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 600;
+    color: #555;
+}
+
+.bunk-form input[type="text"],
+.bunk-form input[type="number"] {
+    width: calc(100% - 22px);
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 1em;
+    box-sizing: border-box;
+}
+
+/* Styling for Search Controls */
+.search-controls {
+    display: flex;
+    flex-wrap: wrap; /* Allow wrapping on smaller screens */
+    gap: 15px; /* Space between elements */
+    margin-bottom: 20px;
+    align-items: flex-end; /* Align buttons at the bottom */
+}
+
+.search-controls div {
+    flex: 1; /* Allow inputs to grow */
+    min-width: 200px; /* Minimum width for inputs */
+}
+
+.search-controls label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 600;
+    color: #555;
+}
+
+.search-controls input {
+    width: calc(100% - 22px);
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 1em;
+    box-sizing: border-box;
+}
+
+.search-controls button {
+    margin-top: 0; /* Override default button margin-top */
+    flex-shrink: 0; /* Prevent buttons from shrinking */
+}
+
+.search-controls .secondary-button {
+    background-color: #6c757d; /* Gray for clear button */
+    box-shadow: 0 2px 5px rgba(108, 117, 125, 0.2);
+}
+
+.search-controls .secondary-button:hover {
+    background-color: #5a6268;
+}
+
+
+/* Styling for displayed Bunk Cards */
+#bunkInfoDisplay {
+    margin-top: 20px;
+    border-top: 1px solid #eee;
+    padding-top: 20px;
+}
+
+.bunk-card {
+    background-color: #f8f9fa; /* Light background for cards */
+    border: 1px solid #e9ecef;
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 15px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    transition: transform 0.2s ease;
+}
+
+.bunk-card:hover {
+    transform: translateY(-3px); /* Slight lift on hover */
+}
+
+.bunk-card h3 {
+    color: #007bff;
+    margin-top: 0;
+    margin-bottom: 10px;
+}
+
+.bunk-card p {
+    margin-bottom: 8px;
+    line-height: 1.5;
+}
+
+.bunk-card strong {
+    color: #343a40;
+}
+
+.bunk-card .posted-by {
+    font-size: 0.85em;
+    color: #6c757d;
+    margin-top: 15px;
+    border-top: 1px dashed #e9ecef;
+    padding-top: 10px;
+}
+
+.book-slot-button {
+    background-color: #28a745; /* Green for book button */
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.95em;
+    margin-top: 10px;
+    transition: background-color 0.3s ease;
+}
+
+.book-slot-button:hover {
+    background-color: #218838;
+}
+
+.book-slot-button:disabled {
+    background-color: #6c757d; /* Gray when disabled */
+    cursor: not-allowed;
+    opacity: 0.7;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .auth-container, .main-app-container, .role-section {
+        padding: 20px;
+        border-radius: 8px;
+    }
+    .header-bar {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 15px;
+    }
+    .header-bar .logout-button {
+        margin-top: 10px;
+    }
+    .search-controls {
+        flex-direction: column;
+        gap: 10px;
+    }
+    .search-controls div {
+        min-width: unset; /* Remove min-width on small screens */
+        width: 100%;
+    }
+    .search-controls input {
+        width: 100%;
+    }
+    .search-controls button {
+        width: 100%;
+        margin-top: 5px;
+    }
+}
